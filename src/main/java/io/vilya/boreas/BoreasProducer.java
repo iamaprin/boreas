@@ -9,6 +9,8 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author iamaprin
@@ -17,12 +19,18 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 public class BoreasProducer {
     
     public static void main(String[] args) throws JMSException {
-        ConnectionFactory factory = new ActiveMQConnectionFactory("tcp://127.0.0.1:61613");
-        Connection conn = factory.createConnection("admin", "1");
+        ConnectionConfiguration configuration = new ConnectionConfiguration()
+                .setBrokerURL("tcp://127.0.0.1:61613")
+                .setUsername("admin")
+                .setPassword("1");
+        
+        Connection conn = new ConnectionBuilder()
+                .setConfiguration(configuration)
+                .build();
         
         Session sess = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-     
-        Destination dest = sess.createQueue("SampleQueue");
+        
+        Destination dest = sess.createTopic("/test");
      
         MessageProducer prod = sess.createProducer(dest);
      
