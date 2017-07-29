@@ -2,7 +2,7 @@ package io.vilya.boreas.activemq;
 
 import javax.validation.constraints.NotNull;
 
-import io.vilya.boreas.BaseBean;
+import io.vilya.boreas.bean.BaseBean;
 
 /**
  * @author iamaprin

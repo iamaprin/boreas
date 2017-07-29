@@ -1,4 +1,4 @@
-package io.vilya.boreas;
+package io.vilya.boreas.service.impl;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -19,6 +19,15 @@ import javax.jms.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.vilya.boreas.ConnectionBuilder;
+import io.vilya.boreas.annotation.Subscribe;
+import io.vilya.boreas.bean.BoreasMessage;
+import io.vilya.boreas.bean.ConnectionConfiguration;
+import io.vilya.boreas.bean.MethodBean;
+import io.vilya.boreas.exception.BoreasException;
+import io.vilya.boreas.listener.BoreasJMSListener;
+import io.vilya.boreas.service.IBoreasJMSService;
+
 /**
  * @author iamaprin
  * @time 2017年6月18日 下午9:11:16
@@ -35,8 +44,20 @@ public class BoreasJMSServiceImpl implements IBoreasJMSService {
     private Map<String, List<MethodBean>> topics = new HashMap<>();
     
     @Override
-    public void publish(BoreasMessage message) {
-        throw new BoreasException("unfinished interface!");
+    public void publish(BoreasMessage boreasMessage) {
+        if (!isInitlized) {
+        	throw new BoreasException("Boreas service not initlized");
+        }
+        
+        boreasMessage.verify();
+        
+        try {
+        	Topic topic = session.createTopic(boreasMessage.getTopic());
+        	TextMessage message = session.createTextMessage(boreasMessage.getMessage());
+        	session.createProducer(topic).send(message);
+        } catch (Exception e) {
+        	throw new BoreasException(e);
+		}
     }
     
     @Override
@@ -134,8 +155,6 @@ public class BoreasJMSServiceImpl implements IBoreasJMSService {
     private void doSubscribe() throws JMSException {
         Topic _topic;
         MessageConsumer consumer;
-        // String topic;
-        // List<MethodBean> methodBeans;
         for (Entry<String, List<MethodBean>> entry : topics.entrySet()) {
             String topic = entry.getKey();
             List<MethodBean> methodBeans = entry.getValue();

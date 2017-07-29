@@ -1,4 +1,8 @@
-package io.vilya.boreas;
+package io.vilya.boreas.service;
+
+import io.vilya.boreas.bean.BoreasMessage;
+import io.vilya.boreas.bean.ConnectionConfiguration;
+import io.vilya.boreas.listener.BoreasJMSListener;
 
 /**
  * @author iamaprin

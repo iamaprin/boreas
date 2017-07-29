@@ -1,4 +1,4 @@
-package io.vilya.boreas;
+package io.vilya.boreas.activemq;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -11,6 +11,9 @@ import javax.jms.Session;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.vilya.boreas.ConnectionBuilder;
+import io.vilya.boreas.bean.ConnectionConfiguration;
 
 /**
  * @author iamaprin

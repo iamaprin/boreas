@@ -1,72 +1,38 @@
 package io.vilya.boreas.activemq;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
+import javax.jms.TextMessage;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.junit.Test;
-
-import io.vilya.boreas.BoreasMessage;
+import io.vilya.boreas.annotation.Subscribe;
+import io.vilya.boreas.bean.ConnectionConfiguration;
+import io.vilya.boreas.listener.BoreasJMSListener;
+import io.vilya.boreas.service.IBoreasJMSService;
+import io.vilya.boreas.service.impl.BoreasJMSServiceImpl;
 
 /**
  * @author iamaprin
- * @time 2017年6月16日 下午10:10:41
+ * @time 2017年7月4日 下午11:31:01
  */
 public class Test1 {
 
-    @Test
-    public void test1() throws JMSException {
-        ConnectionFactory factory = new ActiveMQConnectionFactory("tcp://127.0.0.1:61613");
-        Connection conn = factory.createConnection("admin", "1");
+    public static void main(String[] args) {
         
-        Session sess = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-     
-        Destination dest = sess.createQueue("SampleQueue");
-     
-        MessageProducer prod = sess.createProducer(dest);
-     
-        Message msg = sess.createTextMessage("Simples Assim");
-     
-        prod.send(msg);
-    }
-    
-    
-    @Test
-    public void test2() throws JMSException {
-        ConnectionFactory factory = new ActiveMQConnectionFactory("tcp://127.0.0.1:61613");
-        Connection connection = factory.createConnection("admin", "1");
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        ConnectionConfiguration configuration = new ConnectionConfiguration()
+                .setBrokerURL("tcp://127.0.0.1:61613")
+                .setUsername("admin")
+                .setPassword("1");
         
-        Destination dest = session.createQueue("SampleQueue");
-        MessageConsumer consumer = session.createConsumer(dest);
-        consumer.setMessageListener(new MessageListener() {
+        IBoreasJMSService service = new BoreasJMSServiceImpl();
+        service.addMessageListener(new BoreasJMSListener() {
             
-            @Override
-            public void onMessage(Message message) {
-                System.out.println("receive message:");
-                System.out.println(message);
+            @Subscribe(topic="/test")
+            public void test(TextMessage message) throws JMSException {
+                System.out.println(message.getText());
             }
+            
+            
         });
-        
-        connection.start();
+        service.init(configuration);
     }
-    
-    @Test
-    public void test4() {
-        
-        TestBean test = new TestBean();
-        test.verify();
-        
-    }
-    
-    
-    
     
 }

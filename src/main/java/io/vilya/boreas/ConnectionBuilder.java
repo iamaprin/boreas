@@ -6,6 +6,9 @@ import javax.jms.JMSException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import io.vilya.boreas.bean.ConnectionConfiguration;
+import io.vilya.boreas.exception.BoreasException;
+
 /**
  * @author iamaprin
  * @time 2017年6月18日 下午8:36:49

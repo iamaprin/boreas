@@ -1,4 +1,4 @@
-package io.vilya.boreas;
+package io.vilya.boreas.listener;
 
 /**
  * @author iamaprin

@@ -1,6 +1,6 @@
 package io.vilya.boreas.activemq;
 
-import io.vilya.boreas.BoreasJMSListener;
+import io.vilya.boreas.listener.BoreasJMSListener;
 
 /**
  * @author iamaprin

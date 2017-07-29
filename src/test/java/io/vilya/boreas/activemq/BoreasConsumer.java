@@ -1,4 +1,4 @@
-package io.vilya.boreas;
+package io.vilya.boreas.activemq;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;

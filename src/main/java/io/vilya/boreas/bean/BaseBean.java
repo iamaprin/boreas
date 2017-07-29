@@ -1,8 +1,11 @@
-package io.vilya.boreas;
+package io.vilya.boreas.bean;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import javax.validation.constraints.NotNull;
+
+import io.vilya.boreas.exception.BoreasException;
+import io.vilya.boreas.exception.FieldVerifyFailedException;
 
 /**
  * @author iamaprin
