@@ -15,10 +15,10 @@ public class Subsciption extends BaseBean {
     private String topic;
     
     @NotNull
-    private Method method;
+    private transient Method method;
     
     @NotNull
-    private Object instance;
+    private transient Object instance;
     
     
     /**

@@ -13,7 +13,7 @@ public class BoreasMessage extends BaseBean {
     private String topic;
     
     @NotNull
-    private String message;
+    private Object message;
 
     /**
      * @return the topic
@@ -33,14 +33,14 @@ public class BoreasMessage extends BaseBean {
     /**
      * @return the message
      */
-    public String getMessage() {
+    public Object getMessage() {
         return message;
     }
 
     /**
      * @param message the message to set
      */
-    public BoreasMessage setMessage(String message) {
+    public BoreasMessage setMessage(Object message) {
         this.message = message;
         return this;
     }    

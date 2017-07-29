@@ -3,15 +3,19 @@ package io.vilya.boreas.service.impl;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
+import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
@@ -27,6 +31,7 @@ import io.vilya.boreas.bean.MethodBean;
 import io.vilya.boreas.exception.BoreasException;
 import io.vilya.boreas.listener.BoreasJMSListener;
 import io.vilya.boreas.service.IBoreasJMSService;
+import io.vilya.boreas.utils.JsonUtils;
 
 /**
  * @author iamaprin
@@ -40,8 +45,10 @@ public class BoreasJMSServiceImpl implements IBoreasJMSService {
     private boolean isInitlized = false;
     private Connection connection;
     private Session session;
-    
+        
     private Map<String, List<MethodBean>> topics = new HashMap<>();
+    
+    private Map<String, MessageProducer> producerCache = new HashMap<>();
     
     @Override
     public void publish(BoreasMessage boreasMessage) {
@@ -52,9 +59,10 @@ public class BoreasJMSServiceImpl implements IBoreasJMSService {
         boreasMessage.verify();
         
         try {
-        	Topic topic = session.createTopic(boreasMessage.getTopic());
-        	TextMessage message = session.createTextMessage(boreasMessage.getMessage());
-        	session.createProducer(topic).send(message);
+            MessageProducer producer = getProducer(boreasMessage.getTopic());
+            String message = JsonUtils.stringify(boreasMessage.getTopic());
+        	TextMessage textMessage = session.createTextMessage(message);
+        	producer.send(textMessage);
         } catch (Exception e) {
         	throw new BoreasException(e);
 		}
@@ -213,7 +221,17 @@ public class BoreasJMSServiceImpl implements IBoreasJMSService {
         });
     }
     
-    
+    private MessageProducer getProducer(String topic) throws JMSException {
+    	MessageProducer producer;
+    	if (producerCache.containsKey(topic)) {
+        	producer = producerCache.get(topic);
+        } else {
+        	Topic topicObj = session.createTopic(topic);
+        	producer = session.createProducer(topicObj);
+        	producerCache.put(topic, producer);
+        }
+    	return producer;
+    }
     
     
     

@@ -24,13 +24,10 @@ public class Test1 {
         
         IBoreasJMSService service = new BoreasJMSServiceImpl();
         service.addMessageListener(new BoreasJMSListener() {
-            
             @Subscribe(topic="/test")
             public void test(TextMessage message) throws JMSException {
                 System.out.println(message.getText());
             }
-            
-            
         });
         service.init(configuration);
     }
